@@ -1,37 +1,20 @@
-from http.server import BaseHTTPRequestHandler
-from http.server import HTTPServer
+from flask import Flask, jsonify
 
-class RequestResponser(BaseHTTPRequestHandler):
-    
-    def do_GET(self):
-       if self.path == '/':
-           self.send_response(200)
-           self.send_header('Content-type', 'text/plain')
-           self.end_headers()
-           message = "Hello World"
-           self.wfile.write(message.encode('utf-8'))
-       elif self.path == '/endpoint1':
-           self.send_response(200)
-           self.send_header('Content-type', 'text/plain')
-           self.end_headers()
-           message = "Response from endpoint 1"
-           self.wfile.write(message.encode('utf-8'))
+app = Flask(__name__)
 
-       else:
-           self.send_response(200)
-           self.send_header('Content-type', 'text/plain')
-           self.end_headers()
-           message = "404 not found" 
-           self.wfile.write(message.encode('utf-8'))  
-        
-        
-        
-def run(serverClass = HTTPServer, serverResponse = RequestResponser, port = 5000):
-    server_address = ('', port)
-    httpd = serverClass(server_address, serverResponse)
-    print(f'Starting Sever on Port {port}...')
-    httpd.serve_forever()
+@app.route('/')
+def index():
+    return "Homepage"
+
+@app.route('/about')
+def about():
+    return "About-Us"
+
+@app.route('/data')
+def data():
+    sample_data = {"Name" : "John Doe", "Age" : 25, "City" : "New Jersey"}
+    return jsonify(sample_data)
+
+def __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
     
-    
-if __name__ == '__main__':
-    run()
